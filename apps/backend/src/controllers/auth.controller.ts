@@ -1,8 +1,11 @@
 import type { Request, RequestHandler, Response } from "express";
 import { ApiResponse, asyncHandler, CustomError } from "@delegate/auth";
+import { createLogger } from "@delegate/monitoring";
 import config from "@delegate/config";
 import { authService } from "../services/index.js";
 import { generateCookieOptions } from "../config/cookie";
+
+const logger = createLogger({ serviceName: "nen-auth-controller" });
 
 export const signup: RequestHandler = asyncHandler(
   async (req: Request, res: Response) => {
