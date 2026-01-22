@@ -110,9 +110,18 @@ export class AuthService {
   }
 
   async verifyGoogleToken(credential: string) {
+    const audience = config.auth.googleClientId;
+    
+    console.log("[AuthService] Starting Google token verification...");
+    console.log("[AuthService] Using Audience (ID):", audience ? `${audience.substring(0, 10)}...` : "MISSING!");
+
+    if (!audience) {
+      throw new Error("GOOGLE_CLIENT_ID is not configured on the backend");
+    }
+
     const ticket = await oauth2Client.verifyIdToken({
       idToken: credential,
-      audience: config.auth.googleClientId,
+      audience: audience,
     });
 
     const payload = ticket.getPayload();
