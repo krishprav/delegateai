@@ -6,7 +6,12 @@ import appConfig from "@delegate/config";
 export type { CredentialsI, PropertiesI, CredentialSubmitPayload, UserCredentials, IEdge, INode, Measured, NodeData, Position, Workflow } from "./types/index.js"
 
 const connectionString = appConfig.database.url;
-const pool = new pg.Pool({ connectionString });
+const isProduction = process.env.NODE_ENV === "production" || connectionString.includes("neon.tech");
+
+const pool = new pg.Pool({
+    connectionString,
+    ssl: isProduction ? { rejectUnauthorized: false } : false
+});
 const adapter = new PrismaPg(pool);
 
 export const prisma = new PrismaClient({ adapter });
