@@ -1,0 +1,28 @@
+{
+  "name": "@delegate/db",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/node": "^25.1.0",
+    "@types/pg": "^8.15.6",
+    "dotenv": "^17.2.3"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "scripts": {
+    "build": "bun x prisma generate"
+  },
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@delegate/config": "workspace:*",
+    "@prisma/adapter-pg": "^7.0.0",
+    "@prisma/client": "^7.0.0",
+    "pg": "^8.16.3",
+    "prisma": "^7.0.0"
+  }
+}

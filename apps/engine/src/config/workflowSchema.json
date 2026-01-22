@@ -1,0 +1,75 @@
+{
+  "executionId": "abc123-def456-...",
+  "workflowId": "workflow-789", 
+  "userId": "user-456",
+  "triggeredBy": "manual",
+  "triggeredAt": "2024-01-15T10:30:00.000Z",
+  "status": "queued",
+  "priority": "normal",
+  "maxRetries": 3,
+  "timeout": 300000,
+  "metadata": {
+    "source": "api",
+    "userAgent": "...",
+    "ip": "..."
+  },
+  "workflow": {
+    "id": "workflow-789",
+    "name": "My Workflow", 
+    "active": true,
+    "nodes": [
+      {
+        "id": "trigger-1",
+        "type": "manualTrigger",
+        "position": { "x": -126.6496, "y": -26.47664 },
+        "data": {
+          "label": "Trigger Manually",
+          "triggerId": "d3328419-4ea7-45ea-8e88-ee48be927b61",
+          "triggerType": "manual",
+          "description": "Runs the flow on clicking a button"
+        }
+      },
+      {
+        "id": "action-1", 
+        "type": "action",
+        "position": { "x": 36.677, "y": 63.877 },
+        "data": {
+          "name": "Telegram",
+          "type": "TelegramNodeType", 
+          "label": "Telegram",
+          "application": "Telegram",
+          "actionType": "TelegramNodeType",
+          "credentials": {  },
+          "parameters": {  },
+          "metadata": {  }
+        }
+      },
+      {
+        "id": "action-3",
+        "type": "action", 
+        "position": { "x": 144.525, "y": 228.090 },
+        "data": {
+          "name": "Telegram",
+          "type": "TelegramNodeType",
+          "label": "Telegram",
+          "application": "Telegram"
+
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "xy-edge__trigger-1-action-1",
+        "source": "trigger-1",
+        "target": "action-1", 
+        "animated": true
+      },
+      {
+        "id": "xy-edge__action-1-action-3",
+        "source": "action-1",
+        "target": "action-3",
+        "animated": true
+      }
+    ]
+  }
+}

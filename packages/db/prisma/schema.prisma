@@ -1,0 +1,112 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Application {
+  Telegram
+  whatsapp
+  OpenAi
+  gmail
+  resend
+}
+
+enum ExecutionStatus {
+  QUEUED
+  RUNNING
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+model User {
+  id                 String              @id @default(cuid())
+  email              String              @unique
+  name               String?
+  passwordHash       String?
+  lastLoggedId       DateTime?
+  refreshToken       String? // Hashed refresh token
+  refreshTokenExpiry DateTime?
+  createdAt          DateTime?           @default(now())
+  updatedAt          DateTime?           @updatedAt
+  workflow           Workflow[]
+  userCredentials    UserCredentials[]
+  executions         WorkflowExecution[]
+}
+
+model Workflow {
+  id          String    @id @default(cuid())
+  userId      String
+  name        String
+  description String?
+  active      Boolean
+  tags        String[]  @default([])
+  nodes       Json[]
+  edges       Json[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @default(now())
+  deletedAt   DateTime?
+
+  user       User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  executions WorkflowExecution[]
+}
+
+model WorkflowExecution {
+  id           String          @id @default(cuid())
+  workflowId   String
+  workflowName String
+  userId       String
+  status       ExecutionStatus
+  triggeredBy  String // "manual", "schedule", "webhook"
+  startedAt    DateTime        @default(now())
+  finishedAt   DateTime?
+  duration     Int? // milliseconds
+  error        String?
+  nodeResults  Json[] // Array of node execution results
+  metadata     Json? // triggeredAt, source, etc.
+
+  workflow Workflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([workflowId])
+  @@index([status])
+  @@index([startedAt])
+}
+
+model UserCredentials {
+  id          String   @id @default(cuid())
+  name        String
+  type        String?
+  apiName     String?
+  application String?
+  appIcon     String?
+  userId      String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
+  data        Json
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model AvailabeTriggers {
+  id          String   @unique @default(uuid())
+  name        String
+  type        String
+  description String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
+}
+
+model Project {
+  id String @unique @default(uuid())
+}
