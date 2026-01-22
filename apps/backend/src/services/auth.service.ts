@@ -121,9 +121,13 @@ export class AuthService {
       throw new Error("Invalid token payload");
     }
 
+    console.log("Verifying Google token for email:", payload.email);
+
     let user = await prisma.user.findUnique({
       where: { email: payload.email },
     });
+
+    console.log("User found:", !!user);
 
     if (!user) {
       const name = payload.name || `${payload.given_name || ""} ${payload.family_name || ""}`.trim();
